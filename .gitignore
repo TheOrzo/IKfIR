@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Old models
+panda_model_157.zip
+
 # Distribution / packaging
 .Python
 build/
@@ -132,6 +135,7 @@ venv.bak/
 bin/
 include/
 lib/
+pyvenv.cfg
 
 # Spyder project settings
 .spyderproject
