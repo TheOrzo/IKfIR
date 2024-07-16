@@ -1,0 +1,26 @@
+# Configuration for Pick and Place task
+
+# Execution configuration
+training: true              # Enables training
+simulation: false            # Enables simulaton
+multiprocessing: true       # Selects between SubprocVecEnv and DummyVecEnv
+num_envs: 8                 # Number of simultanious created environments
+random_seed: false          # Enables random seed
+seed: 0                     # Defines seed if not randmo generated
+
+
+# Robot configuration
+#robot_name: "Panda"
+robot_name: "IIWA"
+robot_controller: "OSC_POSE"
+
+# Learing configuration
+#algorithm: "PPO"
+algorithm: "DDPG"
+normalize: True
+training_repetitions: 200
+training_total_timesteps: 1000000
+
+
+# Storage configuration
+model_file_name: model
