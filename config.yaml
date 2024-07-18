@@ -2,11 +2,11 @@
 
 # Execution configuration
 training: true              # Enables training
-simulation: false            # Enables simulaton
+simulation: true            # Enables simulaton
 multiprocessing: true       # Selects between SubprocVecEnv and DummyVecEnv
-num_envs: 8                 # Number of simultanious created environments
+num_envs: 5                # Number of simultanious created environments
 random_seed: false          # Enables random seed
-seed: 0                     # Defines seed if not randmo generated
+seed: 554641                   # Defines seed if not randmo generated
 
 
 # Robot configuration
@@ -15,12 +15,15 @@ robot_name: "IIWA"
 robot_controller: "OSC_POSE"
 
 # Learing configuration
-#algorithm: "PPO"
-algorithm: "DDPG"
+algorithm: "PPO"
+#algorithm: "DDPG"
 normalize: True
-training_repetitions: 200
-training_total_timesteps: 1000000
+training_repetitions: 1
+training_total_timesteps: 10000
+
+# RLkit PPO configurations
+
 
 
 # Storage configuration
-model_file_name: model
+model_file_name: PPO_model
