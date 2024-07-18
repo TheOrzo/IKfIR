@@ -1,22 +1,8 @@
-# robosuite
-
-![gallery of_environments](docs/images/gallery.png)
-
-[**[Homepage]**](https://robosuite.ai/) &ensp; [**[White Paper]**](https://arxiv.org/abs/2009.12293) &ensp; [**[Documentations]**](https://robosuite.ai/docs/overview.html) &ensp; [**[ARISE Initiative]**](https://github.com/ARISE-Initiative)
-
+# Innovative Konzepte zur Programmierung von Industrierobotern
 -------
-## Latest Updates
-- [11/15/2022] **v1.4**: Backend migration to DeepMind's official [MuJoCo Python binding](https://github.com/deepmind/mujoco), robot textures, and bug fixes :robot: [[release notes]](https://github.com/ARISE-Initiative/robosuite/releases/tag/v1.4.0) [[documentation]](http://robosuite.ai/docs/v1.4/)
-
-- [10/19/2021] **v1.3**: Ray tracing and physically based rendering tools :sparkles: and access to additional vision modalities 🎥 [[video spotlight]](https://www.youtube.com/watch?v=2xesly6JrQ8) [[release notes]](https://github.com/ARISE-Initiative/robosuite/releases/tag/v1.3) [[documentation]](http://robosuite.ai/docs/v1.3/)
-
-- [02/17/2021] **v1.2**: Added observable sensor models :eyes: and dynamics randomization :game_die: [[release notes]](https://github.com/ARISE-Initiative/robosuite/releases/tag/v1.2)
-
-- [12/17/2020] **v1.1**: Refactored infrastructure and standardized model classes for much easier environment prototyping :wrench: [[release notes]](https://github.com/ARISE-Initiative/robosuite/releases/tag/v1.1)
-
+## Project Assignment: Solving the Pick-and-Place Environment in Robosuite
 -------
-
-**robosuite** is a simulation framework powered by the [MuJoCo](http://mujoco.org/) physics engine for robot learning. It also offers a suite of benchmark environments for reproducible research. The current release (v1.4) features long-term support with the official MuJoCo binding from DeepMind. This project is part of the broader [Advancing Robot Intelligence through Simulated Environments (ARISE) Initiative](https://github.com/ARISE-Initiative), with the aim of lowering the barriers of entry for cutting-edge research at the intersection of AI and Robotics.
+**Innovative Konzepte zur Programmierung von Industrierobotern**[IKzPvI]([http://mujoco.org/](https://ipr.iar.kit.edu/lehrangebote_3804.php)) is a interactive course at the Karlsruhe Insitute of Technology supervised by Prof. Björn Hein dealing with new ways of programming industrial robots. The topics covered in this lecture include collsion-detection, collision-free path planning, path optimization and a fairly new advancement in robot programmin, Reinforcement Learning. The final task of the course is a sub-topic of one of the covered topics and has to be implemented in a jupyter notebook by a team of two course participants.
 
 Data-driven algorithms, such as reinforcement learning and imitation learning, provide a powerful and generic tool in robotics. These learning paradigms, fueled by new advances in deep learning, have achieved some exciting successes in a variety of robot control problems. However, the challenges of reproducibility and the limited accessibility of robot hardware (especially during a pandemic) have impaired research progress. The overarching goal of **robosuite** is to provide researchers with:
 
