@@ -1,33 +1,68 @@
 # Innovative Konzepte zur Programmierung von Industrierobotern
--------
+<img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
+
 ## Project Assignment: Solving the Pick-and-Place Environment in Robosuite
--------
+Welcome to the "Solving the Pick-and-Place Environment in Robosuite" repository! This repo is intended for ease of replication of our project results, as well as documenting the progress of our project.
+
 **[Innovative Konzepte zur Programmierung von Industrierobotern](https://ipr.iar.kit.edu/lehrangebote_3804.php)** is a interactive course at the Karlsruhe Insitute of Technology supervised by Prof. Björn Hein dealing with new ways of programming industrial robots. The topics covered in this lecture include collsion-detection, collision-free path planning, path optimization and a fairly new advancement in robot programmin, Reinforcement Learning. The final task of the course is a sub-topic of one of the covered topics and has to be implemented in a jupyter notebook by a team of two course participants.
 
-Data-driven algorithms, such as reinforcement learning and imitation learning, provide a powerful and generic tool in robotics. These learning paradigms, fueled by new advances in deep learning, have achieved some exciting successes in a variety of robot control problems. However, the challenges of reproducibility and the limited accessibility of robot hardware (especially during a pandemic) have impaired research progress. The overarching goal of **robosuite** is to provide researchers with:
+This repository holds the following contents:
 
-* a standardized set of benchmarking tasks for rigorous evaluation and algorithm development;
-* a modular design that offers great flexibility to design new robot simulation environments;
-* a high-quality implementation of robot controllers and off-the-shelf learning algorithms to lower the barriers to entry.
+* source code framework for training and evaluating the policy in the pick-and-place environments;
+* a configuration file to set the different robosuite modules (robots, controllers, etc.) and tune hyperparameters;
 
-This framework was originally developed since late 2017 by researchers in [Stanford Vision and Learning Lab](http://svl.stanford.edu) (SVL) as an internal tool for robot learning research. Now it is actively maintained and used for robotics research projects in SVL and the [UT Robot Perception and Learning Lab](http://rpl.cs.utexas.edu) (RPL). We welcome community contributions to this project. For details please check out our [contributing guidelines](CONTRIBUTING.md).
+## Installation
 
-This release of **robosuite** contains seven robot models, eight gripper models, six controller modes, and nine standardized tasks. It also offers a modular design of APIs for building new environments with procedural generation. We highlight these primary features below:
+### Minimal installation
 
-* **standardized tasks**: a set of standardized manipulation tasks of large diversity and varying complexity and RL benchmarking results for reproducible research;
-* **procedural generation**: modular APIs for programmatically creating new environments and new tasks as combinations of robot models, arenas, and parameterized 3D objects;
-* **robot controllers**: a selection of controller types to command the robots, such as joint-space velocity control, inverse kinematics control, operational space control, and 3D motion devices for teleoperation;
-* **multi-modal sensors**: heterogeneous types of sensory signals, including low-level physical states, RGB cameras, depth maps, and proprioception;
-* **human demonstrations**: utilities for collecting human demonstrations, replaying demonstration datasets, and leveraging demonstration data for learning. Check out our sister project [robomimic](https://arise-initiative.github.io/robomimic-web/);
-* **photorealistic rendering**: integration with advanced graphics tools that provide real-time photorealistic renderings of simulated scenes.
-
-## Citation
-Please cite [**robosuite**](https://robosuite.ai) if you use this framework in your publications:
-```bibtex
-@inproceedings{robosuite2020,
-  title={robosuite: A Modular Simulation Framework and Benchmark for Robot Learning},
-  author={Yuke Zhu and Josiah Wong and Ajay Mandlekar and Roberto Mart\'{i}n-Mart\'{i}n and Abhishek Joshi and Soroush Nasiriany and Yifeng Zhu},
-  booktitle={arXiv preprint arXiv:2009.12293},
-  year={2020}
-}
+From source:
 ```
+pip install -e .
+```
+
+### Full installation (with extra envs and test dependencies)
+
+```
+apt-get install swig cmake ffmpeg
+pip install -r requirements.txt
+pip install -e .[plots,tests]
+```
+
+Please see [Stable Baselines3 documentation](https://stable-baselines3.readthedocs.io/en/master/) for alternatives to install stable baselines3.
+
+## Train an Agent
+
+The hyperparameters for each environment are defined in `hyperparameters/algo_name.yml`.
+
+If the environment exists in this file, then you can train an agent using:
+```
+python train.py --algo algo_name --env env_id
+```
+
+Evaluate the agent every 10000 steps using 10 episodes for evaluation (using only one evaluation env):
+```
+python train.py --algo sac --env HalfCheetahBulletEnv-v0 --eval-freq 10000 --eval-episodes 10 --n-eval-envs 1
+```
+
+## Enjoy a Trained Agent
+
+**Note: to download the repo with the trained agents, you must use `git clone --recursive https://github.com/DLR-RM/rl-baselines3-zoo`** in order to clone the submodule too.
+
+
+If the trained agent exists, then you can see it in action using:
+```
+python enjoy.py --algo algo_name --env env_id
+```
+
+For example, enjoy A2C on Breakout during 5000 timesteps:
+```
+python enjoy.py --algo a2c --env BreakoutNoFrameskip-v4 --folder rl-trained-agents/ -n 5000
+```
+
+## Hyperparameters Tuning
+
+Please see the [dedicated section](https://rl-baselines3-zoo.readthedocs.io/en/master/guide/tuning.html) of the documentation.
+
+## Contributors
+
+The contributors of this project are: [@TheOrzo](https://github.com/TheOrzo) and [@Enes1097](https://github.com/Enes1097)
