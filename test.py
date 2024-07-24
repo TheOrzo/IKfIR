@@ -17,7 +17,7 @@ from robosuite.wrappers import GymWrapper
 
 from stable_baselines3 import PPO, DDPG
 
-controller_config = load_controller_config(default_controller="OSC_POSE")
+controller_config = load_controller_config(default_controller="JOINT_POSITION")
 
 def make_env(env_id, options, rank, seed=0):
     """
@@ -56,15 +56,15 @@ if __name__ == '__main__':
                 camera_widths=84,                       # image width
                 reward_shaping=True),                    # use a dense reward signal for learning
             i,
-            3815046
+            7183485
             ) for i in range(1)])
 
 
-    test_name = "Sawyer_freq20_hor1000_learn001_steps768K_controlOSC"
+    test_name = "Sawyer_freq20_hor1000_learn001_steps3M_controlJP"
 
     #env.render_mode = 'mujoco'
-    env = VecNormalize.load('./' + test_name + '/env.pkl', env)
-    model = PPO.load("./" + test_name + "/model.zip", env=env)
+    env = VecNormalize.load('./' + test_name + '/env8.pkl', env)
+    model = PPO.load("./" + test_name + "/model8.zip", env=env)
 
     def get_policy_action(obs):
         # a trained policy could be used here, but we choose a random action
