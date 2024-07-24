@@ -1,0 +1,36 @@
+# Configuration for Pick and Place task
+
+# Execution configuration
+training: True              # Enables training
+simulation: false           # Enables simulaton
+multiprocessing: true       # Selects between SubprocVecEnv and DummyVecEnv
+num_envs: 16                # Number of simultaneous created environments
+num_eval_envs: 8
+horizon: 2048               # Maximum number of steps per episode
+control_freq: 150            # Control frequency of the robot
+random_seed: false          # Enables random seed
+seed: 1297111683            # Defines seed if not randomly generated
+
+# Robot configuration
+#robot_name: "Panda"
+#robot_name: "IIWA"
+robot_name: "Sawyer"
+robot_controller: "OSC_POSE"
+
+# Learing configuration
+#algorithm: "DDPG"
+algorithm: "PPO"
+#algorithm: "SAC"
+policy: "MlpPolicy"
+#policy: "CnnPolicy"
+normalize: True
+training_repetitions: 1
+training_total_timesteps: 100000
+batch_size: 256
+#batch_size: 128
+
+#Evaluation configuration
+evaluation_repetitions: 3
+
+# Storage configuration
+model_file_name: PPO-IIWA-OSC_POSE-HORIZON_2048-100000-CF150"
