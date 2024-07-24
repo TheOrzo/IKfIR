@@ -178,9 +178,9 @@ class TrialEvalCallback(EvalCallback):
 def objective(trial: optuna.Trial) -> float:
     kwargs = DEFAULT_HYPERPARAMS.copy()
     # Sample hyperparameters.
-    kwargs.update(sample_a2c_params(trial))
+    kwargs.update(sample_ppo_params(trial))
     # Create the RL model.
-    model = A2C(**kwargs)
+    model = PPO(**kwargs)
     # Create env used for evaluation.
     eval_env = Monitor(gymnasium.make(ENV_ID))
     # Create the callback that will periodically evaluate and report the performance.
