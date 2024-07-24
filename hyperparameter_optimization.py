@@ -17,7 +17,8 @@ from optuna.visualization import plot_optimization_history, plot_slice
 
 
 #optuna.logging.get_logger("optuna").addHandler(logging.StreamHandler(sys.stdout))
-study_name = "PPO_Sawyer_OSC_POSE"  # Unique identifier of the study.
+#study_name = "PPO_Sawyer_OSC_POSE"  # Unique identifier of the study.
+study_name = "study1"
 storage_name = "sqlite:///{}.db".format(study_name)
 
 # Define the environment setup
@@ -31,6 +32,19 @@ def make_env(env_id, options, rank, seed=0):
     set_random_seed(seed)
     return _init
 
+def evaluate_policy(model, env, n_eval_episodes=5):
+    all_episode_rewards = []
+    for _ in range(n_eval_episodes):
+        episode_rewards = []
+        done = np.array([False])
+        obs = env.reset()
+        while not done.all():
+            action, _ = model.predict(obs, deterministic=True)
+            obs, reward, done, info = env.step(action)
+            episode_rewards.append(reward)
+        all_episode_rewards.append(np.sum(episode_rewards))
+    mean_reward = np.mean(all_episode_rewards)
+    return mean_reward
 
 def save_model(model_path, model, vec_env):
     model.save(model_path + ".zip")
@@ -38,14 +52,16 @@ def save_model(model_path, model, vec_env):
 
 def objective(trial):
     # Suggest hyperparameters
-    learning_rate = trial.suggest_float('learning_rate', 1e-4, 1e-2, log=True)
+    #learning_rate = trial.suggest_float('learning_rate', 1e-4, 1e-2, log=True)
+    learning_rate = 0.001
     batch_size = trial.suggest_categorical('batch_size', [32, 64, 128, 256])
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
-    n_steps = trial.suggest_categorical('n_steps', [128, 256, 512, 1024, 2048])
-    horizon = trial.suggest_categorical('horizon', [500, 1000, 1500])
-    control_freq = trial.suggest_uniform('control_freq', 20, 150)
+    n_steps = trial.suggest_categorical('n_steps', [512, 1024, 2048])
+    #horizon = trial.suggest_categorical('horizon', [512, 1024, 2048])
+    horizon = 512
+    control_freq = trial.suggest_uniform('control_freq', 100, 150)
     #total_timesteps = trial.suggest_categorical('total_timesteps', [1e5, 2e5, 5e5, 1e6, 2e6])
-    total_timesteps = 5e5
+    total_timesteps = 3e5
     ent_coef = trial.suggest_float("ent_coef", 0.00000001, 0.1, log=True)
     clip_range = trial.suggest_categorical("clip_range", [0.1, 0.2, 0.3, 0.4])
     #n_epochs = trial.suggest_categorical("n_epochs", [1, 5, 10, 20])
@@ -53,6 +69,21 @@ def objective(trial):
     max_grad_norm = trial.suggest_categorical("max_grad_norm", [0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 5])
     vf_coef = trial.suggest_float("vf_coef", 0, 1)
     net_arch_type = trial.suggest_categorical("net_arch", ["tiny", "small", "medium"])
+
+    print(
+        f"Learning rate: {learning_rate}, "
+        f"Batch size: {batch_size}, "
+        f"Gamma: {gamma}, "
+        f"N steps: {n_steps}, "
+        f"Horizon: {horizon}, "
+        f"Control freq: {control_freq}, "
+        f"Total timesteps: {total_timesteps}, "
+        f"Entropy coefficient: {ent_coef}, "
+        f"Clip range: {clip_range}, "
+        f"GAE lambda: {gae_lambda}, "
+        f"Max grad norm: {max_grad_norm}, "
+        f"Value function coefficient: {vf_coef}, "
+        f"Network architecture: {net_arch_type}")
 
     # Load configuration
     with open("config_hyperparams.yaml") as stream:
@@ -80,7 +111,7 @@ def objective(trial):
     # Setup environment
     if config["multiprocessing"]:
         env = SubprocVecEnv([make_env("PickPlace", env_options, i, config["seed"]) for i in range(config["num_envs"])], start_method='spawn')
-        eval_env = SubprocVecEnv([make_env("PickPlace", env_options, i, config["seed"]) for i in range(config["num_envs"])], start_method='spawn')
+        eval_env = SubprocVecEnv([make_env("PickPlace", env_options, i, config["seed"]) for i in range(config["num_eval_envs"])], start_method='spawn')
         eval_env = VecNormalize(eval_env)
         # TODO: account when using multiple envs
         if batch_size > n_steps:
@@ -145,45 +176,15 @@ def objective(trial):
                                  log_path="./logs/", eval_freq=2048,
                                  deterministic=True, render=False)
     '''
-    '''
-    # this gives somewhat different (higher) results to the rollout/ep_re_mean. discounting effect?
-    # one would expect to be able to read the rollout/ep_re_mean directly but I just cant find a way
-    class SaveBestModelCallback(BaseCallback):
-        def __init__(self, save_path: str, verbose=1):
-            super(SaveBestModelCallback, self).__init__(verbose)
-            # self.check_freq = check_freq
-            self.save_path = save_path
-            self.best_mean_reward = 0
-            self.not_first_run = False
-
-        def _on_rollout_start(self) -> None:
-            if self.not_first_run:
-                episode_rewards = []
-                for i in range(len(self.locals["infos"])):
-                    episode_rewards.append(self.locals["infos"][i]["episode"]["r"])
-                # print(episode_rewards)
-                mean_reward = sum(episode_rewards) / len(episode_rewards)
-                if mean_reward > self.best_mean_reward:
-                    self.best_mean_reward = mean_reward
-                    if self.verbose > 0:
-                        print(
-                            f"Saving new best model to {self.save_path} with mean reward {mean_reward}"
-                        )
-                    save_model(self.save_path, self.model, self.training_env)
-            self.not_first_run = True
-
-        def _on_step(self) -> bool:
-            return True
-    
-    callback = SaveBestModelCallback(save_path="./logs/optimization/")
-    '''
 
     # Train the model
     model.learn(total_timesteps=total_timesteps, progress_bar=True)
     
     # Evaluate the model
     #mean_reward = eval_callback.last_mean_reward
-    mean_reward, _ = model.evaluate_policy(eval_env, n_eval_episodes=5, deterministic=True)
+    #mean_reward, _ = model.evaluate_policy(eval_env, n_eval_episodes=5, deterministic=True)
+    mean_reward = evaluate_policy(model, eval_env, n_eval_episodes=5)
+    print("Mean reward: ", mean_reward)
     
     trial.report(mean_reward, step=total_timesteps)
 
@@ -196,7 +197,7 @@ def objective(trial):
 # Optimize hyperparameters
 if __name__ == "__main__":
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=50, timeout=600)
+    study.optimize(objective, n_trials=50, timeout=90000)
 
     pruned_trials = [t for t in study.trials if t.state == optuna.trial.TrialState.PRUNED]
     complete_trials = [t for t in study.trials if t.state == optuna.trial.TrialState.COMPLETE]
