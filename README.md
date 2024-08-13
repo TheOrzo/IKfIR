@@ -1,16 +1,16 @@
-
 # Solving the Pick-and-Place Environment in Robosuite
 <img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
 
 Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Robosuite" repository! This repository is intended to allow for the replication of our project results and documents its progress including insights as well as tests.
 
 ## Table of Contents
-This repository holds the source code framework for training and evaluating the policy in the pick-and-place environments as well as a configuration file to set the different robosuite modules (robots, controllers, etc.) and tune hyperparameters
- - [Project Description](#project-description)
+ This repository holds the source code framework for training and evaluating the policy in the pick-and-place environments as well as a configuration file to set the different robosuite modules (robots, controllers, etc.) and tune hyperparameters
+- [Project Description](#project-description)
 	 - [Course Description](#course-description)
 	 - [Task Description](#task-description)
- - [Installation](#installation)
-   
+- [
+- [Installation](#installation)
+- 
 ## Project Description
 ### Course description
 **[Innovative Konzepte zur Programmierung von Industrierobotern](https://ipr.iar.kit.edu/lehrangebote_3804.php)** is an interactive course at the Karlsruhe Institute of Technology, supervised by Prof. Björn Hein, dealing with new methods of programming industrial robots. The topics covered in this lecture include collision-detection, collision-free path planning, path optimization and the emerging field of Reinforcement Learning. As the conclusion of the lecture, a final project related to one of these topics must be implemented by a team of two course participants.
@@ -27,15 +27,30 @@ The task (for each object) can be subdivided into the following subtasks:
  5. Repeat starting at 1. until all objects are placed in their corresponding containers
 
 #### Reward function:
-The reward function is essential to understanding the behaviour of the robot while interacting with the environment. In robosuite each environment has implemented two different kinds of reward functions. A binary reward awards the robot only in the case if the object is placed in its corresponding container. We employed the dense reward function which uses reward shaping and rewards the robot for each subtask (like reaching & grasping), these rewards are then added successively. The image below taken from the [python code for the pick-and-place task](https://github.com/ARISE-Initiative/robosuite/blob/eafb81f54ffc104f905ee48a16bb15f059176ad3/robosuite/environments/manipulation/pick_place.py#L260) describes the additional rewards for each subtask:
+The reward function is essential to understanding the behaviour of the robot while interacting with the environment. In robosuite each environment has implemented two different kinds of reward functions. A binary reward rewards the robot only in the case if the object is placed in its corresponding container. We employed the dense reward function which uses reward shaping and rewards the robot for each subtask (like reaching & grasping), these rewards are then added successively. The image below taken from the [python code for the pick-and-place task](https://github.com/ARISE-Initiative/robosuite/blob/eafb81f54ffc104f905ee48a16bb15f059176ad3/robosuite/environments/manipulation/pick_place.py#L260) describes the additional rewards for each subtask:
 
 ![](https://github.com/TheOrzo/IKfIR/blob/main/.assets/img/reward_function.png)
 
 ## Installation
 
-### Minimal installation
+### Installing robosuite and stable baselines 3
+Even though in theory employing robosuite on windows is possible (e.g. using a VM or WSL), it leads to complications, which is why using a linux or mac computer is highly recommended. Before being able to use our repository, you need to install robosuite following the [installation guide](https://robosuite.ai/docs/installation.html) from the robosuite documentation. We installed it from source:
 
-From source:
+```
+$ git clone https://github.com/ARISE-Initiative/robosuite.git
+$ cd robosuite
+$ pip3 install -r requirements.txt
+```
+Our repository uses the stable release of the stable baselines 3 for RL algorithm implementations which you can install by following the [installation guide](https://stable-baselines3.readthedocs.io/en/master/guide/install.html):
+
+```
+pip  install  stable-baselines3[extra]
+```
+
+### Installing our repository
+On debian the non free cuda driver has to be installed as a kernel level module in order to use the GPU for calculations. This change resulted in crashes of wayland DSP so a X11 has to be used as a fallback.
+
+Our code is writen for python3.11. The following python packages are needed: numpy (below version 2), robosuite, stable-baselines3[extra], libhdf5, h5py
 ```
 pip install -e .
 ```
@@ -86,4 +101,3 @@ Please see the [dedicated section](https://rl-baselines3-zoo.readthedocs.io/en/m
 ## Contributors
 
 The contributors of this project are: [@TheOrzo](https://github.com/TheOrzo) and [@Enes1097](https://github.com/Enes1097)
-
