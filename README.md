@@ -1,15 +1,16 @@
+
 # Solving the Pick-and-Place Environment in Robosuite
 <img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
 
-Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Robosuite" repository! This repository is intended to allow for the replication of our project results and documents its progress including insights as well as tests.
+Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Robosuite" repository! This repository is intended to allow for the replication of our project results and documents its progress including insights and tests.
 
 ## Table of Contents
  This repository holds the source code framework for training and evaluating the policy in the pick-and-place environments as well as a configuration file to set the different robosuite modules (robots, controllers, etc.) and tune hyperparameters
 - [Project Description](#project-description)
 	 - [Course Description](#course-description)
 	 - [Task Description](#task-description)
-- [
-- [Installation](#installation)
+- [Getting started](#getting-started)
+- [Training](#training)
 - 
 ## Project Description
 ### Course description
@@ -31,10 +32,10 @@ The reward function is essential to understanding the behaviour of the robot whi
 
 ![](https://github.com/TheOrzo/IKfIR/blob/main/.assets/img/reward_function.png)
 
-## Installation
+## Getting started
 
 ### Installing robosuite and stable baselines 3
-Even though in theory employing robosuite on windows is possible (e.g. using a VM or WSL), it leads to complications, which is why using a linux or mac computer is highly recommended. Before being able to use our repository, you need to install robosuite following the [installation guide](https://robosuite.ai/docs/installation.html) from the robosuite documentation. We installed it from source:
+Employing robosuite on windows is possible (e.g. by using a VM or WSL), but it leads to complications during installing, which is why using a linux or mac computer is highly recommended. Before being able to use our repository, you need to install robosuite following the [installation guide](https://robosuite.ai/docs/installation.html) from the robosuite documentation. We installed it from source:
 
 ```
 $ git clone https://github.com/ARISE-Initiative/robosuite.git
@@ -52,24 +53,70 @@ On debian the non free cuda driver has to be installed as a kernel level module 
 
 Our code is writen for python3.11. The following python packages are needed: numpy (below version 2), robosuite, stable-baselines3[extra], libhdf5, h5py
 ```
-pip install -e .
+!python3  -m  pip  install  ipywidgets
+!TMPDIR='/var/tmp'  python3  -m  pip  install  -r  requirements.txt
 ```
 
-### Full installation (with extra envs and test dependencies)
-
 ```
-apt-get install swig cmake ffmpeg
-pip install -r requirements.txt
-pip install -e .[plots,tests]
+import numpy as np
+import os
+import robosuite as suite
+
+from robosuite import load_controller_config
+from robosuite.environments.base import register_env
+from robosuite.controllers import load_controller_config
+from stable_baselines3.common.noise import NormalActionNoise
+from stable_baselines3.common.save_util import save_to_zip_file, load_from_zip_file
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, SubprocVecEnv
+from stable_baselines3.common.env_util import make_vec_env
+from stable_baselines3.common.utils import set_random_seed
+from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback
+from robosuite.wrappers import GymWrapper
+
+from stable_baselines3 import PPO, DDPG, SAC
+
+# Check if MPS(Mac) or cuda(linux) is available
+if torch.backends.mps.is_available():
+	device = torch.device("mps")
+	print("MPS backend is available.")
+else if torch.backends.cuda.is_available():
+	device = torch.device("cuda")
+	print("Cuda backend is available.")
+else:
+	device = torch.device("cpu")
+	print("MPS backend is not available, using CPU.")
 ```
 
-Please see [Stable Baselines3 documentation](https://stable-baselines3.readthedocs.io/en/master/) for alternatives to install stable baselines3.
+## Training
+### Initial parameters
+To grasp a hold of how different parameters of the model affect the model performance, training a model with different parameters allows to learn the relations between these parameters and the changes to the model. The following script is a config file defining all parameters that can be adjusted for subsequent runs.
+```
+parameters = dict(
+    # Environment
+    robot="Panda",
+    gripper="default",
+    controller="OSC_POSE",
+    seed=12532135,
+    control_freq=20,
+    horizon=2048,
+    camera_size=84,
+    episodes=200,
+    n_processes=6,
+    # Algorithm 
+    algorithm="PPO",
+    policy="MlpPolicy",
+    gamma=0.99,
+    learning_rate=1e-3,
+    n_steps=2048,
+)
+
+test_name = str(parameters["robot"]) + "_freq" + str(parameters["robot"]) + "_hor" + str(parameters["horizon"]) + "_learn" + str(parameters["learning_rate"]) + "_episodes" + str(parameters["episodes"]) + "_control" + str(parameters["controller"])
+```
+Initial parameters seen in this dict are taken from multiple sources (Benchmarks, Implementations & Papers) referred to under [Sources](#Sources).
 
 ## Train an Agent
-
-The hyperparameters for each environment are defined in `hyperparameters/algo_name.yml`.
-
-If the environment exists in this file, then you can train an agent using:
+The following script will train a model with the previously specified parameters. The model and tensorboard logs will be stored in the "tests" folder named according to the specified parameters.
 ```
 python train.py --algo algo_name --env env_id
 ```
@@ -98,6 +145,15 @@ python enjoy.py --algo a2c --env BreakoutNoFrameskip-v4 --folder rl-trained-agen
 
 Please see the [dedicated section](https://rl-baselines3-zoo.readthedocs.io/en/master/guide/tuning.html) of the documentation.
 
+## Sources
+### Benchmarks and Implementations:
+- [robosuite Benchmark](https://robosuite.ai/docs/algorithms/benchmarking.html)
+- [RL Baselines3 Zoo](https://github.com/DLR-RM/rl-baselines3-zoo)
+- [Cross-Embodiment Robot Manipulation Skill Transfer using Latent Space Alignment (Wang et al. 2024](https://arxiv.org/abs/2406.01968)
+- [The Task Decomposition and Dedicated Reward-System-Based Reinforcement Learning Algorithm for Pick-and-Place (Kim et al. 2023)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10296071/pdf/biomimetics-08-00240.pdf)
+- [Reinforcement Learning with Task Decomposition and Task-Specific Reward System for Automation of High-Level Tasks (Kwon et al. 2024)](https://www.mdpi.com/2313-7673/9/4/196)
+
+- 
 ## Contributors
 
 The contributors of this project are: [@TheOrzo](https://github.com/TheOrzo) and [@Enes1097](https://github.com/Enes1097)
