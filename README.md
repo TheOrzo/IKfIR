@@ -9,7 +9,7 @@ Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Ro
 	 - [Course Description](#course-description)
 	 - [Task Description](#task-description)
 - [Installation and Setup](#installation-and-setup)
-- [Training](#training)
+- [Getting Started](#getting-started)
 - 
 ## Project Description
 ### Course description
@@ -80,7 +80,7 @@ parameters = dict(
     n_steps=2048,
 )
 ```
-Initial parameters seen in this dict are taken from multiple sources (Benchmarks, Implementations & Papers) referred to under [Sources](#Sources).
+Initial parameters seen in this dict are taken from multiple sources (Benchmarks, Implementations & Papers) referred to under [Sources](#Sources). By initial exploring, we discovered that changing the robot model, batch_size, as well as the learning rate have the greatest impact on the model performance.
 
 ### Train an Agent
 Run the following command to train a model with the previously specified parameters. The model and tensorboard logs will be stored in the "tests" folder named according to the specified parameters.
@@ -101,19 +101,22 @@ With the following command, the trained model defined by the specified parameter
 python employ.py
 ```
 
-### Further testing
+### Testing insights and further tests
 
-With these initial tests, it was possible to test a variety of robot configurations and samples of parameters. We identified the Sawyer robot with its default gripper and the PPO algorithm as our most promising candidate.
+With these initial tests, we tested a variety of robot configurations and parameters, evaluating them based on visual critic and the total collected reward per episode.
+We identified the Sawyer robot with its default gripper and the PPO algorithm as our most promising candidate. An additional insight is that changing the parameters responsible for steps taken until a policy update, the horizon and the control frequency of the robot influences the performance of the agent significantly. 
 
-Furthermore, we could optimize the first parameters. With the predefined control_freq of the environment of 20 the robot arm was not ä
-
-We identified the lack of computing performance as a bottleneck.
+Further tests were conducted, but the lack of computing performance and the parameters being highly correlated with each other served as a strong bottleneck in solving this high-level task. The success of trying random combinations of parameters manually is very limited, since there is a very high number of possible configurations.
 
 todo some simulation examples with tensorboard graphs and everything:
 
-## Hyperparameters Tuning
+## Hyperparameter Tuning with Optuna
+It is easy to overlook configurations which would enable better performance when the parameters correlate with each other. In most cases, changing a parameter requires adapting the other parameters, otherwise the agent might even perform worse.
+To bridge that gap of achieving a higher performance despite correlating parameters, a wider field of parameters needs to be evaluated.
 
-Please see the [dedicated section](https://rl-baselines3-zoo.readthedocs.io/en/master/guide/tuning.html) of the documentation.
+The Optuna hyper parameter optimization framework allows us to automate the task of  It samples a value of a range for each parameter for each run. Then it trains a model with this configuration and tests its performacne. This can be done for hundrets of runs unsupervised. The performance for each configuration is logged and can be analysed by the researcher.
+
+The
 
 ## Sources
 ### Benchmarks and Implementations:
