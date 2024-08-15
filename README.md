@@ -1,15 +1,14 @@
-
 # Solving the Pick-and-Place Environment in Robosuite
 <img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
 
-Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Robosuite" repository! This repository is intended to allow for the replication of our project results and documents its progress including insights and tests.
+Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Robosuite" repository! This repository is intended to allow for the replication of our project results and documents its progress including insights as well as tests.
 
 ## Table of Contents
  This repository holds the source code framework for training and evaluating the policy in the pick-and-place environments as well as a configuration file to set the different robosuite modules (robots, controllers, etc.) and tune hyperparameters
 - [Project Description](#project-description)
 	 - [Course Description](#course-description)
 	 - [Task Description](#task-description)
-- [Getting started](#getting-started)
+- [Installation and Setup](#installation-and-setup)
 - [Training](#training)
 - 
 ## Project Description
@@ -32,7 +31,7 @@ The reward function is essential to understanding the behaviour of the robot whi
 
 ![](https://github.com/TheOrzo/IKfIR/blob/main/.assets/img/reward_function.png)
 
-## Getting started
+## Installation and Setup
 
 ### Installing robosuite and stable baselines 3
 Employing robosuite on windows is possible (e.g. by using a VM or WSL), but it leads to complications during installing, which is why using a linux or mac computer is highly recommended. Before being able to use our repository, you need to install robosuite following the [installation guide](https://robosuite.ai/docs/installation.html) from the robosuite documentation. We installed it from source:
@@ -53,44 +52,13 @@ On debian the non free cuda driver has to be installed as a kernel level module 
 
 Our code is writen for python3.11. The following python packages are needed: numpy (below version 2), robosuite, stable-baselines3[extra], libhdf5, h5py
 ```
-!python3  -m  pip  install  ipywidgets
-!TMPDIR='/var/tmp'  python3  -m  pip  install  -r  requirements.txt
+python3  -m  pip  install  ipywidgets
+TMPDIR='/var/tmp'  python3  -m  pip  install  -r  requirements.txt
 ```
 
-```
-import numpy as np
-import os
-import robosuite as suite
-
-from robosuite import load_controller_config
-from robosuite.environments.base import register_env
-from robosuite.controllers import load_controller_config
-from stable_baselines3.common.noise import NormalActionNoise
-from stable_baselines3.common.save_util import save_to_zip_file, load_from_zip_file
-from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, SubprocVecEnv
-from stable_baselines3.common.env_util import make_vec_env
-from stable_baselines3.common.utils import set_random_seed
-from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback
-from robosuite.wrappers import GymWrapper
-
-from stable_baselines3 import PPO, DDPG, SAC
-
-# Check if MPS(Mac) or cuda(linux) is available
-if torch.backends.mps.is_available():
-	device = torch.device("mps")
-	print("MPS backend is available.")
-else if torch.backends.cuda.is_available():
-	device = torch.device("cuda")
-	print("Cuda backend is available.")
-else:
-	device = torch.device("cpu")
-	print("MPS backend is not available, using CPU.")
-```
-
-## Training
+## Getting started
 ### Initial parameters
-To grasp a hold of how different parameters of the model affect the model performance, training a model with different parameters allows to learn the relations between these parameters and the changes to the model. The following script is a config file defining all parameters that can be adjusted for subsequent runs.
+To get a feel of how different parameters of the model affect the model performance in a specific environment, we train the model subsequently with different parameters. The following script is a config file defining all parameters that can be adjusted for these subsequent runs.
 ```
 parameters = dict(
     # Environment
@@ -102,6 +70,7 @@ parameters = dict(
     horizon=2048,
     camera_size=84,
     episodes=200,
+    eval_episodes=5
     n_processes=6,
     # Algorithm 
     algorithm="PPO",
@@ -110,36 +79,37 @@ parameters = dict(
     learning_rate=1e-3,
     n_steps=2048,
 )
-
-test_name = str(parameters["robot"]) + "_freq" + str(parameters["robot"]) + "_hor" + str(parameters["horizon"]) + "_learn" + str(parameters["learning_rate"]) + "_episodes" + str(parameters["episodes"]) + "_control" + str(parameters["controller"])
 ```
 Initial parameters seen in this dict are taken from multiple sources (Benchmarks, Implementations & Papers) referred to under [Sources](#Sources).
 
-## Train an Agent
-The following script will train a model with the previously specified parameters. The model and tensorboard logs will be stored in the "tests" folder named according to the specified parameters.
+### Train an Agent
+Run the following command to train a model with the previously specified parameters. The model and tensorboard logs will be stored in the "tests" folder named according to the specified parameters.
 ```
-python train.py --algo algo_name --env env_id
-```
-
-Evaluate the agent every 10000 steps using 10 episodes for evaluation (using only one evaluation env):
-```
-python train.py --algo sac --env HalfCheetahBulletEnv-v0 --eval-freq 10000 --eval-episodes 10 --n-eval-envs 1
+python train.py
 ```
 
-## Enjoy a Trained Agent
-
-**Note: to download the repo with the trained agents, you must use `git clone --recursive https://github.com/DLR-RM/rl-baselines3-zoo`** in order to clone the submodule too.
-
-
-If the trained agent exists, then you can see it in action using:
+### Tensorboard
+The following command will open a locally hosted http server for the tensorboard. Navigate to [http://localhost:6006](http://localhost:6006/) to view the data logged during training.
 ```
-python enjoy.py --algo algo_name --env env_id
+python  -m  tensorboard.main  --logdir=tensor_logger
 ```
 
-For example, enjoy A2C on Breakout during 5000 timesteps:
+### Employ the Agent
+With the following command, the trained model defined by the specified parameters will be used for the task execution. If the trained agent exists, you can run it in the specified environment by:
+
 ```
-python enjoy.py --algo a2c --env BreakoutNoFrameskip-v4 --folder rl-trained-agents/ -n 5000
+python employ.py
 ```
+
+### Further testing
+
+With these initial tests, it was possible to test a variety of robot configurations and samples of parameters. We identified the Sawyer robot with its default gripper and the PPO algorithm as our most promising candidate.
+
+Furthermore, we could optimize the first parameters. With the predefined control_freq of the environment of 20 the robot arm was not ä
+
+We identified the lack of computing performance as a bottleneck.
+
+todo some simulation examples with tensorboard graphs and everything:
 
 ## Hyperparameters Tuning
 
