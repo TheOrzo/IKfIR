@@ -1,3 +1,4 @@
+
 # Solving the Pick-and-Place Environment in Robosuite
 <img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
 
@@ -17,6 +18,14 @@ Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Ro
 	- [Employ an Agent](#employ-an-agent)
 	- [Insights and further testing](#insights-and-further-testing)
 - [Hyperparameter Tuning with Optuna](#hyperparameter-tuning-with-optuna)
+	- [Installing Optuna](#installing-optuna)
+	- [Running Optuna](#running-optuna)
+	- [Optuna Dashboard](#optuna-dashboard)
+	- [Analysis](#analysis)
+	- [Testing optimized parameters](#testing-optimized-parameters)
+- [Conclusion](#conclusion)
+- [Sources](#Sources)
+- [Contributors](#contributors)
 
 ## Project Description
 ### Course description
@@ -44,14 +53,14 @@ The reward function is essential to understanding the behaviour of the robot whi
 Employing robosuite on windows is possible (e.g. by using a VM or WSL), but it leads to complications during installing, which is why using a linux or mac computer is highly recommended. Before being able to use our repository, you need to install robosuite following the [installation guide](https://robosuite.ai/docs/installation.html) from the robosuite documentation. We installed it from source:
 
 ```
-$ git clone https://github.com/ARISE-Initiative/robosuite.git
-$ cd robosuite
-$ pip3 install -r requirements.txt
+% git clone https://github.com/ARISE-Initiative/robosuite.git
+% cd robosuite
+% pip3 install -r requirements.txt
 ```
 Our repository uses the stable release of the stable baselines 3 for RL algorithm implementations which you can install by following the [installation guide](https://stable-baselines3.readthedocs.io/en/master/guide/install.html):
 
 ```
-pip  install  stable-baselines3[extra]
+% pip  install  stable-baselines3[extra]
 ```
 
 ### Installing our repository
@@ -59,8 +68,8 @@ On debian the non free cuda driver has to be installed as a kernel level module 
 
 Our code is writen for python3.11. The following python packages are needed: numpy (below version 2), robosuite, stable-baselines3[extra], libhdf5, h5py
 ```
-python3  -m  pip  install  ipywidgets
-TMPDIR='/var/tmp'  python3  -m  pip  install  -r  requirements.txt
+% python3  -m  pip  install  ipywidgets
+% TMPDIR='/var/tmp'  python3  -m  pip  install  -r  requirements.txt
 ```
 
 ## Getting started
@@ -87,26 +96,28 @@ parameters = dict(
     learning_rate=1e-3,
     n_steps=2048,
 )
+
+test_name = str(parameters["robot"]) + "_freq" + str(parameters["robot"]) + "_hor" + str(parameters["horizon"]) + "_learn" + str(parameters["learning_rate"]) + "_episodes" + str(parameters["episodes"]) + "_control" + str(parameters["controller"])
 ```
 Initial parameters seen in this dict are taken from multiple sources (Benchmarks, Implementations & Papers) referred to under [Sources](#Sources). By initial exploring, we discovered that changing the robot model, batch_size, as well as the learning rate have the greatest impact on the model performance.
 
 ### Train an Agent
 Run the following command to train a model with the previously specified parameters. The model and tensorboard logs will be stored in the "tests" folder named according to the specified parameters.
 ```
-python train.py
+% python train.py
 ```
 
 #### Tensorboard
 The following command will open a locally hosted http server for the tensorboard. Navigate to [http://localhost:6006](http://localhost:6006/) to view the data logged during training.
 ```
-python  -m  tensorboard.main  --logdir=tensor_logger
+% python  -m  tensorboard.main  --logdir=tensor_logger
 ```
 
 ### Employ an Agent
 With the following command, the trained model defined by the specified parameters will be used for the task execution. If the trained agent exists, you can run it in the specified environment by:
 
 ```
-python employ.py
+% python employ.py
 ```
 
 ### Insights and further testing
@@ -119,19 +130,41 @@ Further tests were conducted, but the lack of computing performance and the para
 todo some simulation examples with tensorboard graphs and everything:
 
 ## Hyperparameter Tuning with Optuna
+### Installing Optuna
 To bridge the gap of achieving a higher performance of the agent despite correlating parameters, a wider field of parameters needs to be evaluated.
 
 The [Optuna hyperparameter optimization](https://optuna.org) framework make this task feasible by automating the hyperparameter search. By sampling for each run, called trial, a value for each parameter from a specified range and training a model with these parameters, the model performance can be evaluated based on the mean reward. Optuna then provides after a specified number of trials which hyperparameters lead to the best performance, have the highest influence on model performance and how they correlate to each other.
 
-Running the following command executes 200 optima trials. Parameter ranges for the PPO algorithm are taken from the [RL3 baselines zoo repository](https://github.com/DLR-RM/rl-baselines3-zoo/blob/726e2f1d3f1a6ea58ad4ae61c02a4ba71d241e4b/rl_zoo3/hyperparams_opt.py#L11C5-L11C22). To reduce the hyperparameter search space, i.e. limit the number of trials, we either kept certain parameters fixed or reduced their range based on gathered insights from previous tests. Try it out by running the following:
+Install it by running the following command:
 
 ```
-python hyperparameter_optimization.py
+% pip install optuna
+```
+
+### Running Optuna
+Running the following command executes 200 optima trials. Parameter ranges for the PPO algorithm are taken from the [RL3 baselines zoo repository](https://github.com/DLR-RM/rl-baselines3-zoo/blob/726e2f1d3f1a6ea58ad4ae61c02a4ba71d241e4b/rl_zoo3/hyperparams_opt.py#L11C5-L11C22). To reduce the hyperparameter search space, i.e. limit the number of trials, we either kept certain parameters fixed or reduced their range based on gathered insights from previous tests.
+
+```
+% python hyperparameter_optimization.py
 ```
 
 We let optuna run for 48 hours. The logs are also uploaded to this repository. See the next section for the access to the dashboard and our analysis of the results.
 
- 
+### Optuna Dashboard
+Optuna dashboard visualizes the logged results of the optuna execution.
+
+The optuna dashboard can be accessed by executing the following command and opening up https://localhost:port in your browser.
+
+```
+% optuna-dashboard sqlite:///study_sawyer_pickplace.db
+```
+
+### Analysis
+
+### Testing optimized parameters
+
+## Conclusion
+
 ## Sources
 ### Benchmarks and Implementations:
 - [robosuite Benchmark](https://robosuite.ai/docs/algorithms/benchmarking.html)
@@ -142,4 +175,5 @@ We let optuna run for 48 hours. The logs are also uploaded to this repository. S
 
 ## Contributors
 The contributors of this project are: [@Enes1097](https://github.com/Enes1097) and [@TheOrzo](https://github.com/TheOrzo) 
+
 
