@@ -67,13 +67,14 @@ parameters = dict(
     robot="Panda",
     gripper="default",
     controller="OSC_POSE",
-    seed=12532135,
+    seed=1297111683,
     control_freq=20,
     horizon=2048,
-    camera_size=84,
+    camera_size=128,
     episodes=200,
     eval_episodes=5
     n_processes=6,
+    n_eval_processes=4,
     # Algorithm 
     algorithm="PPO",
     policy="MlpPolicy",
