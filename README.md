@@ -1,4 +1,3 @@
-
 # Solving the Pick-and-Place Environment in Robosuite
 <img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
 
@@ -10,7 +9,13 @@ Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Ro
 	 - [Course Description](#course-description)
 	 - [Task Description](#task-description)
 - [Installation and Setup](#installation-and-setup)
+	- [Installing robosuite and stable baselines 3](#installing-robosuite-and-stable-baselines-3)
+	- [Installing our repository](#installing-our-repository)
 - [Getting Started](#getting-started)
+	- [Initial parameters](#initial-parameters)
+	- [Train an Agent](#train-an-agent)
+	- [Employ an Agent](#employ-an-agent)
+	- [Insights and further testing](#insights-and-further-testing)
 - [Hyperparameter Tuning with Optuna](#hyperparameter-tuning-with-optuna)
 
 ## Project Description
@@ -70,11 +75,11 @@ parameters = dict(
     seed=1297111683,
     control_freq=20,
     horizon=2048,
-    camera_size=128,
+    camera_size=84,
     episodes=200,
     eval_episodes=5
     n_processes=6,
-    n_eval_processes=4,
+    n_eval_processes=4
     # Algorithm 
     algorithm="PPO",
     policy="MlpPolicy",
@@ -91,20 +96,20 @@ Run the following command to train a model with the previously specified paramet
 python train.py
 ```
 
-### Tensorboard
+#### Tensorboard
 The following command will open a locally hosted http server for the tensorboard. Navigate to [http://localhost:6006](http://localhost:6006/) to view the data logged during training.
 ```
 python  -m  tensorboard.main  --logdir=tensor_logger
 ```
 
-### Employ the Agent
+### Employ an Agent
 With the following command, the trained model defined by the specified parameters will be used for the task execution. If the trained agent exists, you can run it in the specified environment by:
 
 ```
 python employ.py
 ```
 
-### Testing insights and further tests
+### Insights and further testing
 
 With these initial tests, we tested a variety of robot configurations and parameters, evaluating them based on visual critic and the total collected reward per episode.
 We identified the Sawyer robot with its default gripper and the PPO algorithm as our most promising candidate. An additional insight is that changing the parameters responsible for steps taken until a policy update, the horizon and the control frequency of the robot influences the performance of the agent significantly. 
@@ -118,13 +123,13 @@ To bridge the gap of achieving a higher performance of the agent despite correla
 
 The [Optuna hyperparameter optimization](https://optuna.org) framework make this task feasible by automating the hyperparameter search. By sampling for each run, called trial, a value for each parameter from a specified range and training a model with these parameters, the model performance can be evaluated based on the mean reward. Optuna then provides after a specified number of trials which hyperparameters lead to the best performance, have the highest influence on model performance and how they correlate to each other.
 
-Running the following command executes 200 optima trials. Parameter ranges for the PPO algorithm are taken from the [RL3 baselines zoo repository](https://github.com/DLR-RM/rl-baselines3-zoo/blob/726e2f1d3f1a6ea58ad4ae61c02a4ba71d241e4b/rl_zoo3/hyperparams_opt.py#L11C5-L11C22). To reduce the hyperparameter search space, i.e. limit the number of trials, we either kept certain parameters fixed or reduced their range based on experience. Try it out by running the following:
+Running the following command executes 200 optima trials. Parameter ranges for the PPO algorithm are taken from the [RL3 baselines zoo repository](https://github.com/DLR-RM/rl-baselines3-zoo/blob/726e2f1d3f1a6ea58ad4ae61c02a4ba71d241e4b/rl_zoo3/hyperparams_opt.py#L11C5-L11C22). To reduce the hyperparameter search space, i.e. limit the number of trials, we either kept certain parameters fixed or reduced their range based on gathered insights from previous tests. Try it out by running the following:
 
 ```
 python hyperparameter_optimization.py
 ```
 
-We let optuna run for 30 hours. The logs are also uploaded to this repository. See the next section for the access to the dashboard and our analysis of the results.
+We let optuna run for 48 hours. The logs are also uploaded to this repository. See the next section for the access to the dashboard and our analysis of the results.
 
  
 ## Sources
@@ -137,3 +142,4 @@ We let optuna run for 30 hours. The logs are also uploaded to this repository. S
 
 ## Contributors
 The contributors of this project are: [@Enes1097](https://github.com/Enes1097) and [@TheOrzo](https://github.com/TheOrzo) 
+
