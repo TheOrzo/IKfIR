@@ -1,3 +1,4 @@
+
 # Solving the Pick-and-Place Environment in Robosuite
 <img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
 
@@ -485,7 +486,11 @@ The optuna dashboard can be accessed by executing the following command and open
 ### Testing optimized parameters
 
 ## Conclusion
+As reinforcement learning is still an emerging field, many questions such as which model to use, how much training is needed and how the reward function can be designed or evaluated for a certain task need to be answered. Therefore solving a high-level RL task, such as pick-and-place, requires a structured training and evaluation approach.  New implementations and papers dealing with this topic are published frequently which we made use of while working on this project.
 
+Initial tests helped us to decide e.g. what robot to use, how many training steps are needed and what  horizon range, leads to the best results based on visual (simulation) and tensor board evaluation. Researching papers and implementations helped us reduce the dimension of the parameter space. Even with initial training and tests, certain hyperparameters we previously glossed over had a stronger influence on the model performance than assumed, such as ent_coeff and ...  which we gathered from using the Optuna hyperparameter optimization framework.
+
+Evaluating our results we gathered that the subtask "reaching" is achievable, the robot moves towards objects and touches them (even in the single-object mode). The main problems are reliable grasping and lifting. It seems that the robot attempts to grasp objects, but has not yet understood how its gripper works, the gripper often gets stuck or "broken" during attempts. The objects often get moved around, where they even phase through the walls of the bin. As previously mentioned the bottleneck was the limited computational power in the short time frame of two weeks.
 ## Sources
 ### Benchmarks and Implementations:
 - [robosuite Benchmark](https://robosuite.ai/docs/algorithms/benchmarking.html)
