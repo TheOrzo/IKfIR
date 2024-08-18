@@ -51,7 +51,7 @@ The reward function is essential to understanding the behaviour of the robot whi
 Employing robosuite on windows is possible (e.g. by using a VM or WSL), but it leads to complications during installation, which is why using a linux or mac computer is highly recommended. Our repository also uses the RL algorithm implementations from the stable release of the stable baselines 3 repository.
 
 Install all dependencies (robosuite, SB3,..) needed for this repository by running the following commmand.
-More information about their installation can be found in the [robosuite installation guide](https://robosuite.ai/docs/installation.html) and the [SB3 installation guide](https://stable-baselines3.readthedocs.io/en/master/guide/install.html)
+More information about their installation can be found in the [robosuite installation guide](https://robosuite.ai/docs/installation.html) and the [SB3 installation guide](https://stable-baselines3.readthedocs.io/en/master/guide/install.html).
 
 On debian the non free cuda driver has to be installed as a kernel level module in order to use the GPU for calculations. This change resulted in crashes of wayland DSP so a X11 has to be used as a fallback.
 Our code is writen for python3.11. The following python packages are needed: numpy (below version 2), robosuite, stable-baselines3[extra], libhdf5, h5py
@@ -88,7 +88,7 @@ parameters = dict(
     n_steps=2048,
 )
 
-test_name = str(parameters["robot"]) + "_freq" + str(parameters["robot"]) + "_hor" + str(parameters["horizon"]) + "_learn" + str(parameters["learning_rate"]) + "_episodes" + str(parameters["episodes"]) + "_control" + str(parameters["controller"])
+test_name = str(parameters["robot"]) + "_freq" + str(parameters["control_freq"]) + "_hor" + str(parameters["horizon"]) + "_learn" + str(parameters["learning_rate"]) + "_episodes" + str(parameters["episodes"]) + "_control" + str(parameters["controller"])
 ```
 Initial parameters seen in this dict are taken from multiple sources (Benchmarks, Implementations & Papers) referred to under [Sources](#Sources). By initial exploring, we discovered that changing the robot model, batch_size, as well as the learning rate have the greatest impact on the model performance.
 
@@ -491,6 +491,7 @@ As reinforcement learning is still an emerging field, many questions such as whi
 Initial tests helped us to decide e.g. what robot to use, how many training steps are needed and what  horizon range, leads to the best results based on visual (simulation) and tensor board evaluation. Researching papers and implementations helped us reduce the dimension of the parameter space. Even with initial training and tests, certain hyperparameters we previously glossed over had a stronger influence on the model performance than assumed, such as ent_coeff and ...  which we gathered from using the Optuna hyperparameter optimization framework.
 
 Evaluating our results we gathered that the subtask "reaching" is achievable, the robot moves towards objects and touches them (even in the single-object mode). The main problems are reliable grasping and lifting. It seems that the robot attempts to grasp objects, but has not yet understood how its gripper works, the gripper often gets stuck or "broken" during attempts. The objects often get moved around, where they even phase through the walls of the bin. As previously mentioned the bottleneck was the limited computational power in the short time frame of two weeks.
+
 ## Sources
 ### Benchmarks and Implementations:
 - [robosuite Benchmark](https://robosuite.ai/docs/algorithms/benchmarking.html)
