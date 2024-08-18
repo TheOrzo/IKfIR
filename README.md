@@ -491,6 +491,8 @@ Following are the results of the optuna hyperparameter optimization:
 #### Parallel Coordinate (Combinations of all trialed parameters):
 <img src="https://github.com/TheOrzo/IKfIR/blob/main/.assets/img/parallel_coordinate.png" alt="Parallel Coordinate" width="500">
 
+In the _ section we can see that the parameters _, _, _ are especially important for the earned rewards. 
+
 ### Testing optimized parameters
 
 ## Conclusion
