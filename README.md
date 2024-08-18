@@ -1,4 +1,3 @@
-
 # Solving the Pick-and-Place Environment in Robosuite
 <img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
 
@@ -470,7 +469,7 @@ print('Best hyperparameters: ', study.best_params)
 plot_optimization_history(study)
 ```
 
-We let optuna run for 48 hours. The logs are also uploaded to this repository. See the section [Analysis](#Analysis) for the access to the dashboard and our analysis of the results.
+We let optuna run for 40 trials. The logs are also uploaded to this repository. See the section [Analysis](#Analysis) for the analysis of the results.
 
 ### Optuna Dashboard
 Optuna dashboard visualizes the logged results of the optuna execution.
@@ -482,6 +481,15 @@ The optuna dashboard can be accessed by executing the following command and open
 ```
 
 ### Analysis
+Following are the results of the optuna hyperparameter optimization:
+#### Trial History:
+<img src="https://github.com/TheOrzo/IKfIR/blob/main/.assets/img/trial_history.png" alt="Trial History" width="500">
+
+#### Hyperparameter Importance
+<img src="https://github.com/TheOrzo/IKfIR/blob/main/.assets/img/hyperparameter_importance.png" alt="Hyperparameter Importance" width="500">
+
+#### Parallel Coordinate (Combinations of all trialed parameters):
+<img src="https://github.com/TheOrzo/IKfIR/blob/main/.assets/img/parallel_coordinate.png" alt="Parallel Coordinate" width="500">
 
 ### Testing optimized parameters
 
