@@ -1,4 +1,3 @@
-
 # Solving the Pick-and-Place Environment in Robosuite
 <img src="https://robosuite.ai/docs/images/env_pick_place.png" align="middle" width="100%"/>
 
@@ -10,8 +9,6 @@ Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Ro
 	 - [Course Description](#course-description)
 	 - [Task Description](#task-description)
 - [Installation and Setup](#installation-and-setup)
-	- [Installing robosuite and stable baselines 3](#installing-robosuite-and-stable-baselines-3)
-	- [Installing our repository](#installing-our-repository)
 - [Getting Started](#getting-started)
 	- [Initial parameters](#initial-parameters)
 	- [Train an Agent](#train-an-agent)
@@ -48,28 +45,16 @@ The reward function is essential to understanding the behaviour of the robot whi
 ![](https://github.com/TheOrzo/IKfIR/blob/main/.assets/img/reward_function.png)
 
 ## Installation and Setup
+Employing robosuite on windows is possible (e.g. by using a VM or WSL), but it leads to complications during installation, which is why using a linux or mac computer is highly recommended. Our repository also uses the RL algorithm implementations from the stable release of the stable baselines 3 repository.
 
-### Installing robosuite and stable baselines 3
-Employing robosuite on windows is possible (e.g. by using a VM or WSL), but it leads to complications during installing, which is why using a linux or mac computer is highly recommended. Before being able to use our repository, you need to install robosuite following the [installation guide](https://robosuite.ai/docs/installation.html) from the robosuite documentation. We installed it from source:
+Install all dependencies (robosuite, SB3,..) needed for this repository by running the following commmand.
+More information about their installation can be found in the [robosuite installation guide](https://robosuite.ai/docs/installation.html) and the [SB3 installation guide](https://stable-baselines3.readthedocs.io/en/master/guide/install.html)
 
-```
-% git clone https://github.com/ARISE-Initiative/robosuite.git
-% cd robosuite
-% pip3 install -r requirements.txt
-```
-Our repository uses the stable release of the stable baselines 3 for RL algorithm implementations which you can install by following the [installation guide](https://stable-baselines3.readthedocs.io/en/master/guide/install.html):
-
-```
-% pip  install  stable-baselines3[extra]
-```
-
-### Installing our repository
 On debian the non free cuda driver has to be installed as a kernel level module in order to use the GPU for calculations. This change resulted in crashes of wayland DSP so a X11 has to be used as a fallback.
-
 Our code is writen for python3.11. The following python packages are needed: numpy (below version 2), robosuite, stable-baselines3[extra], libhdf5, h5py
 ```
-% python3  -m  pip  install  ipywidgets
-% TMPDIR='/var/tmp'  python3  -m  pip  install  -r  requirements.txt
+!python3  -m  pip  install  ipywidgets
+!TMPDIR='/var/tmp'  python3  -m  pip  install  -r  requirements.txt
 ```
 
 ## Getting started
@@ -104,20 +89,20 @@ Initial parameters seen in this dict are taken from multiple sources (Benchmarks
 ### Train an Agent
 Run the following command to train a model with the previously specified parameters. The model and tensorboard logs will be stored in the "tests" folder named according to the specified parameters.
 ```
-% python train.py
+!python train.py
 ```
 
 #### Tensorboard
 The following command will open a locally hosted http server for the tensorboard. Navigate to [http://localhost:6006](http://localhost:6006/) to view the data logged during training.
 ```
-% python  -m  tensorboard.main  --logdir=tensor_logger
+!python  -m  tensorboard.main  --logdir=tensor_logger
 ```
 
 ### Employ an Agent
 With the following command, the trained model defined by the specified parameters will be used for the task execution. If the trained agent exists, you can run it in the specified environment by:
 
 ```
-% python employ.py
+!python employ.py
 ```
 
 ### Insights and further testing
@@ -138,17 +123,17 @@ The [Optuna hyperparameter optimization](https://optuna.org) framework make this
 Install it by running the following command:
 
 ```
-% pip install optuna
+!pip install optuna
 ```
 
 ### Running Optuna
-Running the following command executes 200 optima trials. Parameter ranges for the PPO algorithm are taken from the [RL3 baselines zoo repository](https://github.com/DLR-RM/rl-baselines3-zoo/blob/726e2f1d3f1a6ea58ad4ae61c02a4ba71d241e4b/rl_zoo3/hyperparams_opt.py#L11C5-L11C22). To reduce the hyperparameter search space, i.e. limit the number of trials, we either kept certain parameters fixed or reduced their range based on gathered insights from previous tests.
+Running the following command executes 100 optima trials. Parameter ranges for the PPO algorithm are taken from the [RL3 baselines zoo repository](https://github.com/DLR-RM/rl-baselines3-zoo/blob/726e2f1d3f1a6ea58ad4ae61c02a4ba71d241e4b/rl_zoo3/hyperparams_opt.py#L11C5-L11C22). To reduce the hyperparameter search space, i.e. limit the number of trials, we either kept certain parameters fixed or reduced their range based on gathered insights from previous tests.
 
 ```
-% python hyperparameter_optimization.py
+!python hyperparameter_optimization.py
 ```
 
-We let optuna run for 48 hours. The logs are also uploaded to this repository. See the next section for the access to the dashboard and our analysis of the results.
+We let optuna run for 48 hours. The logs are also uploaded to this repository. See the section [Analysis](#Analysis) for the access to the dashboard and our analysis of the results.
 
 ### Optuna Dashboard
 Optuna dashboard visualizes the logged results of the optuna execution.
@@ -156,7 +141,7 @@ Optuna dashboard visualizes the logged results of the optuna execution.
 The optuna dashboard can be accessed by executing the following command and opening up https://localhost:port in your browser.
 
 ```
-% optuna-dashboard sqlite:///study_sawyer_pickplace.db
+!optuna-dashboard sqlite:///study_sawyer_pickplace.db
 ```
 
 ### Analysis
