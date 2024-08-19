@@ -10,6 +10,7 @@ Welcome to the "Project Assignment: Solving the Pick-and-Place Environment in Ro
 	 - [Task Description](#task-description)
 - [Installation and Setup](#installation-and-setup)
 - [Getting Started](#getting-started)
+  	- [Jupyter Notebook Documentation](#jupyter-notebook-documentation)
 	- [Initial parameters](#initial-parameters)
 	- [Train an Agent](#train-an-agent)
 	- [Employ an Agent](#employ-an-agent)
