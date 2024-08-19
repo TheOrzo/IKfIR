@@ -46,7 +46,7 @@ The task (for each object) can be subdivided into the following subtasks:
 #### Reward function:
 The reward function is essential to understanding the behaviour of the robot while interacting with the environment. In robosuite each environment has implemented two different kinds of reward functions. A binary reward rewards the robot only in the case if the object is placed in its corresponding container. We employed the dense reward function which uses reward shaping and rewards the robot for each subtask (like reaching & grasping), these rewards are then added successively. The image below taken from the [python code for the pick-and-place task](https://github.com/ARISE-Initiative/robosuite/blob/eafb81f54ffc104f905ee48a16bb15f059176ad3/robosuite/environments/manipulation/pick_place.py#L260) describes the additional rewards for each subtask:
 
-<img src="./.assets/img/DDPG.png" alt="Training reward with DDPG" width="750">
+<img src="./.assets/img/reward_function.png" alt="Training reward with DDPG" width="750">
 
 ## Installation and Setup
 Employing robosuite on windows is possible (e.g. by using a VM or WSL), but it leads to complications during installation, which is why using a linux or mac computer is highly recommended. Our repository also uses the RL algorithm implementations from the stable release of the stable baselines 3 repository.
