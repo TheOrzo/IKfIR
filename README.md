@@ -655,7 +655,8 @@ For further studies the sampling range of the hyperparameters which seem to be t
 <img src="./.assets/img/hyperparameter_importance.jpg" alt="Hyperparameter Importance" width="500">
 
 #### Parallel Coordinate (Combinations of all trialed parameters):
-Following graph depicts the combinations of parameters used during each of the optuna trials and their respective reward represented by an edge. The scale of how many possible combinations can be explored for an optuna study is easy to imagine. 
+Following graph depicts the combinations of parameters used during each of the optuna trials and their respective reward represented by an edge. The scale of how many possible combinations can be explored for an optuna study is easy to imagine.
+
 <img src="./.assets/img/parallel_coordinate.jpg" alt="Parallel Coordinate" width="500">
 
 
@@ -694,11 +695,7 @@ parameters = dict(
 ```
 
 ### Testing the optimal parameters
-Following simulation shows the evaluation on the robot using the optimal parameters:
-
-<video width="640" height="360" controls>
-  <source src="./.assets/video/optuna.mp4" type="video/mp4">
-</video>
+The simulation is saved under ./assets/optuna.mp4 shows the evaluation on the robot using the optimal parameters:
 
 ## Conclusion
 As reinforcement learning remains an evolving field with many open questions. Which model to use, how much training is needed and how the reward function can be designed or evaluated for a certain task are some of the most crucial to be answered. Therefore solving a high-level RL task, such as pick-and-place, requires a structured training and evaluation approach. New implementations and papers dealing with this topic are published frequently which we used to further increase our knowledge while working on this project.
