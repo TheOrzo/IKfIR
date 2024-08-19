@@ -372,11 +372,7 @@ While trying to setup the environment, we noticed a major downside of DDPG: To b
 Another often used algorithm in publications is the SAC (Soft Actor-Critic) algorithn. However, since SAC is an off-policy algorithm as well, it suffers from the same problem. 
 We managed to reduce the memory usage to 8 Gb by reducing the image resolution of the observation camera drastically (from 128x128 to 32x32 pixels).
 
-The following demo was produced using the DDPG Algorithm with the following parameters: control_freq=50, horizon=1000, learning_rate=0.001, episodes=100, camera_size=30, control_mode=OSC_POSE, n_processes=1 and a replay buffer of 100 episodes. It is stored in the "demo_models" folder appropriately named "DDPG".
-
-<video width="640" height="360" controls>
-  <source src="./.assets/video/DDPG.mp4" type="video/mp4">
-</video>
+The demo found in ./assets/video/DDPG.mp4 was produced using the DDPG Algorithm with the following parameters: control_freq=50, horizon=1000, learning_rate=0.001, episodes=100, camera_size=30, control_mode=OSC_POSE, n_processes=1 and a replay buffer of 100 episodes. It is stored in the "demo_models" folder appropriately named "DDPG".
 
 Reviewing these results, we can assume that the camera resolution is just too low to provide actual meaningful input data. The robot arm swings around without even trying to approach any of the objects. 
 
@@ -398,7 +394,7 @@ This model is stored in the "demo_models" folder named "Panda_freq20_hor500_lear
   <source src="./.assets/video/panda.mp4" type="video/mp4">
 </video>
 
-The simulation shows that the agent is able to approach the objects through its cameras observations. Despite this, the objects get thrown around and glitch through corners due to the high velocities and the large head of the panda robot. Observed can be as well that the gripper is not precise enough to get into a position where it could grasp an object.
+The simulation under ./assets/video/panda.mp4 shows that the agent is able to approach the objects through its cameras observations. Despite this, the objects get thrown around and glitch through corners due to the high velocities and the large head of the panda robot. Observed can be as well that the gripper is not precise enough to get into a position where it could grasp an object.
 
 <img src="./.assets/img/panda.png" width="500">
 
@@ -406,7 +402,7 @@ The episode reward clearly shows improvement compared to DDPG over training epis
 
 To increase the precision, so that the robot rarely knocks over objects, we increased the control frequency for the following test runs and switched to a different robot. So, we ran some tests on the LBR IIWA 7 robot with these changes, which has a smaller dimension and a larger gripper jaws. While it is less likely to knock over the objects, the gripper has difficulties to grasp because of its long jaws. It also tends to exert large velocities, despite high control frequencies and glitch through objects or gets stuck in walls.
 
-The Sawyer robot on the other hand combines a smaller head with shorter gripper jaws. The following demo with the Sawyer robot was trained with the following parameters:
+The Sawyer robot on the other hand combines a smaller head with shorter gripper jaws. The demo at ./assets/video/ sawyer1.mp4 with the Sawyer robot was trained with the following parameters:
 control_freq=100, horizon=500, learning_rate=0.001, episodes=700.
 The model is stored in the "demo_models" folder named "Sawyer_freq100_hor500_learn0.001_episodes700_controlOSC_POSE".
 
@@ -695,7 +691,7 @@ parameters = dict(
 ```
 
 ### Testing the optimal parameters
-The simulation is saved under ./assets/optuna.mp4 shows the evaluation on the robot using the optimal parameters:
+The simulation is saved under ./assets/video/optuna.mp4 shows the evaluation on the robot using the optimal parameters:
 
 ## Conclusion
 As reinforcement learning remains an evolving field with many open questions. Which model to use, how much training is needed and how the reward function can be designed or evaluated for a certain task are some of the most crucial to be answered. Therefore solving a high-level RL task, such as pick-and-place, requires a structured training and evaluation approach. New implementations and papers dealing with this topic are published frequently which we used to further increase our knowledge while working on this project.
