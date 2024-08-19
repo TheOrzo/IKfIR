@@ -113,10 +113,10 @@ parameters = dict(
     gripper="default",
     controller="OSC_POSE",     # OSC_POSE, OSC_POSITION, JOINT_POSITION, JOINT_VELOCITY
     seed=2346421,             
-    control_freq=105.83683882948645,
+    control_freq=100,
     horizon=512,
     camera_size=128,
-    episodes=586,
+    episodes=1000,
     eval_episodes=1,
     n_processes=8,
     n_eval_processes=1,
@@ -127,16 +127,15 @@ parameters = dict(
     learning_rate=1e-3,
     n_steps=512,
     batch_size=128,                 # Only DDPG and SAC
-    entropy_coef=0.0184992592452403,
-    clip_range=0.3,
-    gae_lambda=1,
-    max_grad_norm=2,
-    vf_coef=0.46726549819854346,
-    net_arch_type="small",
+    entropy_coef=0,
+    clip_range=0.2,
+    gae_lambda=0.95,
+    max_grad_norm=0.5,
+    vf_coef=0.5,
+    net_arch_type="medium",
     activation_fn_name="tanh",
     single_object=True,             
 )
-
 # Select process start method depending on the os
 if platform == "linux" or platform == "linux2":
     print('Recognized Linux. Setting start method to forkserver')
